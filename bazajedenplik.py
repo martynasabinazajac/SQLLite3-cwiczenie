@@ -12,7 +12,6 @@ def create_connection(db_file):
     conn = None
     try:
         conn = sqlite3.connect(db_file)
-        return conn
     except Error as e:
         print(e)
 
@@ -157,7 +156,7 @@ if __name__ == "__main__":
    CREATE TABLE IF NOT EXISTS items (
       id integer PRIMARY KEY,
       nazwa text NOT NULL,
-      quantity text,
+      quantity integer,
       description text
    );
    """
@@ -180,19 +179,16 @@ if __name__ == "__main__":
     if conn is not None:
         execute_sql(conn, create_items_sql)
         execute_sql(conn, create_sales_sql)
-        conn.close()
 
     # dodanie do bazy
-    item = ("Książki", "Opowiadanki i takie tam inne", "34")
-    item1 = ("Filmy", "O tym i o tamtym", "101")
-
-    conn = create_connection("mojabaza.db")
+    item = ("Książki", 34, "Opowiadanki i takie tam inne")
+    item1 = ("Filmy", 101, "O tym i o tamtym")
 
     pr_id = add_item(conn, item)
     pr_id1 = add_item(conn, item1)
 
-    sale = (pr_id, "4", "started", "2023-04-11 12:00:00")
-    sale1 = (pr_id1, "15", "started", "2023-04-19 19:00:00")
+    sale = (pr_id, 4, "started", "2023-04-11 12:00:00")
+    sale1 = (pr_id1, 15, "started", "2023-04-19 19:00:00")
 
     sale_id = add_sale(conn, sale)
     sale_id1 = add_sale(conn, sale1)
@@ -214,7 +210,6 @@ if __name__ == "__main__":
     print(select_all(conn, "sales"))
 
     # usunięcie danych
-    conn = create_connection("mojabaza.db")
     delete_where(conn, "sales", id=1)
     print(select_all(conn, "sales"))
 
